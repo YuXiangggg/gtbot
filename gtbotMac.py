@@ -9,7 +9,7 @@ def autobreak(fpos,bpos,poslst):
         gui.click(fpos)
         for i in poslst:
             gui.moveTo(i)
-            gui.dragTo(i.x,i.y,0.55,button="left")
+            gui.dragTo(i.x+1,i.y,0.55,button="left")
             
     def place(bpos,poslst):
         gui.click(bpos)
