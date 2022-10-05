@@ -8,3 +8,5 @@
 <p>git clone https://github.com/YuXiangggg/gtbot</p>
 <p>cd gtbot</p>
 <p>python3 gtbot.py</p>
+
+doesnt work on mac for some reason
