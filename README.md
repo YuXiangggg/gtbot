@@ -4,4 +4,7 @@ Dont find me if you get banned
 i just dont want to revise for bicul ahhhhh
 
 Usage:
-not sure figure out yourself
+
+git clone https://github.com/YuXiangggg/gtbot
+cd gtbot
+python3 gtbot.py
