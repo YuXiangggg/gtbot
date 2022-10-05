@@ -66,7 +66,7 @@ def getinv():
     with keyboard.Listener(on_release = on_release) as listener:
         listener.join()
         
-def confirminv():
+def confirminv(fist,blk):
     gui.moveTo(fist) 
     time.sleep(1)
     gui.moveTo(blk)   
@@ -78,7 +78,7 @@ def confirminv():
 def main():
     print("Welcome to this thing that fishburrito made before bicul eoy\n")
     print("This thing is illegal, you will be a bad growtopian if u use this\n")
-    yn = input("Do you want to be a bad Growtopian? yes/no")
+    yn = input("Do you want to be a bad Growtopian? yes/no \n")
     if yn.lower() != "yes":
         print("Goodjob, bye!")
         time.sleep(1)
@@ -97,7 +97,7 @@ def main():
             getpos()
             print("Now your cursor will move to the squares you selected, if you mess up you can try again")
             confirmpos()
-            retry=input("Enter 1 to retry, 0 to continue")
+            retry=input("Enter 1 to retry, 0 to continue: ")
             if retry != "1":
                 break
             
@@ -107,7 +107,7 @@ def main():
             print("When you are done, press 'q' to confirm")
             getinv()
             print("Now your cursor will move to the squares you selected, if you mess up you can try again")
-            confirminv()
+            confirminv(fist,blk)
             retry=input("Enter 1 to retry, 0 to continue")
             if retry2 != "1":
                 break
