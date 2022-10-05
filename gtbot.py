@@ -28,10 +28,10 @@ def getpos():
         
 
         if key == keyboard._win32.KeyCode(char="c"):
-            print(gui.position())
+            
             lst.append(gui.position())
         if key == keyboard._win32.KeyCode(char="q"):
-            print(lst)
+            
             return False
         
 
@@ -66,7 +66,7 @@ def getinv():
     with keyboard.Listener(on_release = on_release) as listener:
         listener.join()
         
-def confirminv(fist,blk):
+def confirminv():
     gui.moveTo(fist) 
     time.sleep(1)
     gui.moveTo(blk)   
@@ -107,8 +107,8 @@ def main():
             print("When you are done, press 'q' to confirm")
             getinv()
             print("Now your cursor will move to the squares you selected, if you mess up you can try again")
-            confirminv(fist,blk)
-            retry=input("Enter 1 to retry, 0 to continue")
+            confirminv()
+            retry2=input("Enter 1 to retry, 0 to continue")
             if retry2 != "1":
                 break
         #how many hits does it take
