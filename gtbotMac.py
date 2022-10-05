@@ -9,7 +9,7 @@ def autobreak(fpos,bpos,poslst):
         gui.click(fpos)
         for i in poslst:
             gui.moveTo(i)
-            gui.dragTo(i.x+1,i.y,0.55,button="left")
+            gui.dragTo(i.x,i.y,0.55,button="left")
             
     def place(bpos,poslst):
         gui.click(bpos)
@@ -17,8 +17,8 @@ def autobreak(fpos,bpos,poslst):
             gui.click(i)
     
     while not kb.is_pressed('q'):
-        place(fpos,poslst)
-        punch(bpos,poslst)
+        place(bpos,poslst)
+        punch(fpos,poslst)
 
 
 def getpos():
