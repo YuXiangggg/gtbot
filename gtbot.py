@@ -9,14 +9,14 @@ def autobreak(fpos,bpos,poslst):
         gui.click(fpos)
         for i in poslst:
             gui.moveTo(i)
-            gui.dragTo(i,0.55,button="left")
+            gui.dragTo(i.x,i.y,0.55,button="left")
             
     def place(bpos,poslst):
         gui.click(bpos)
         for i in poslst:
             gui.click(i)
     
-    while not keyboard.is_pressed('q'):
+    while not kb.is_pressed('q'):
         place(fpos,poslst)
         punch(bpos,poslst)
 
@@ -46,17 +46,16 @@ def confirmpos():
         
         
 def getinv():
-    global fist
-    global blk
+    
 
     def on_release(key):
         
 
         if key == keyboard._win32.KeyCode(char="f"):
-            
+            global fist
             fist = gui.position()
         if key == keyboard._win32.KeyCode(char="b"):
-            
+            global blk
             blk = gui.position()
         if key == keyboard._win32.KeyCode(char="q"):
             
