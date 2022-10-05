@@ -118,4 +118,5 @@ def main():
         ready = input("Ready? (yes to start)")
         print("Press 'q' to stop")
         autobreak(fist,blk,lst)
-        
+
+main()
