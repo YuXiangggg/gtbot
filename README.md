@@ -10,3 +10,7 @@
 <p>sudo python3 gtbot.py</p>
 
 <p> On mac need to give permission to terminal in accessibility</p>
+
+<p>btw need to pip install some stuff i think</p>
+<p>pip install keyboard</p>
+<p>pip install pynput</p>
