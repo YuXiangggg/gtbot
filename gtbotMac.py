@@ -2,6 +2,9 @@ from pynput import keyboard
 import pyautogui as gui
 import time
 import keyboard as kb 
+from numpy import *
+from PIL import ImageGrab
+from PIL import ImageOps
 
 def autobreak(fpos,bpos,poslst):
 
@@ -70,7 +73,35 @@ def confirminv():
     time.sleep(1)
     gui.moveTo(blk)   
         
+def image_grab(pos):
+    box = (int(pos.x)-10, int(pos.y)+10,int(pos.x)+10,int(pos.y)+20)
+    image = ImageGrab.grab(box)
+    grayImage = ImageOps.grayscale(image)
+    a = array(grayImage.getcolors())
+ 
+    return (a.sum())
     
+def collect(pos,but):
+
+    time.sleep(2)
+    p = True
+    gui.moveTo(but)
+    gui.dragTo(but.x,but.y,0.3,button="left")
+    time.sleep(0.5)
+    gui.moveTo(but)
+    gui.dragTo(but.x,but.y,8,button="left")
+
+    while not kb.is_pressed("t"):
+        
+        #val = 0
+        val = image_grab(pos) 
+        
+        if (val == 291) and (p == True):
+            print("portal")
+
+        else:
+            p = True
+            gui.dragTo(but.x,but.y,2,button="left")   
     
     
     
@@ -117,5 +148,10 @@ def main():
         ready = input("Ready? (yes to start)")
         print("Press 'q' to stop")
         autobreak(fist,blk,lst)
-
+    elif option == "2":
+        print("Working in Progress")
+    elif option == "3":
+        print("Hover ur cursor over punch button and press 'f'; Stand in the middle of the screen and put ur cursor on ur feet and press 'b'; press 'q' when done")
+        getinv()
+        collect(blk,fist)
 main()
