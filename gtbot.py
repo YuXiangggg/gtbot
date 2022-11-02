@@ -27,22 +27,24 @@ def autobreak(fpos,bpos,poslst):
 def getpos():
     global lst
     lst = []
+    poslst = ''
     def on_release(key):
         
 
         if key == keyboard._win32.KeyCode(char="c"):
-            
-            lst.append(gui.position())
+            pos = gui.position()
+            lst.append(pos)
+            poslst = poslst + "&".join([str(pos.x),str(pos.y)]) + " "
         if key == keyboard._win32.KeyCode(char="q"):
-            
+            with open("settings.txt", "w") as f:
+                f.write(poslst+"\n")
             return False
         
 
     with keyboard.Listener(on_release = on_release) as listener:
         listener.join()
         
-    with open("settings.txt", "w") as f:
-        f.write(','.join([i for i in lst])+"\n")
+    
         
     
 def confirmpos():
@@ -56,7 +58,6 @@ def getinv():
 
     def on_release(key):
         
-
         if key == keyboard._win32.KeyCode(char="f"):
             global fist
             fist = gui.position()
@@ -64,17 +65,17 @@ def getinv():
             global blk
             blk = gui.position()
         if key == keyboard._win32.KeyCode(char="q"):
-            
+            with open("settings.txt", 'a') as f:
+                fst = "&".join([str(fist.x),str(fist.y)])
+                bk = "&".join([str(blk.x),str(blk.y)])
+                f.write(",".join([fst,bk]))
             return False
         
 
     with keyboard.Listener(on_release = on_release) as listener:
         listener.join()
         
-    with open("settings.txt", 'a') as f:
-        fst = [fist.x,fist.y]
-        bk = [blk.x,blk.y]
-        f.write(",".join([fst,bk]))
+    
         
 def confirminv():
     gui.moveTo(fist) 
@@ -154,9 +155,14 @@ def main():
                 global lst
                 global fist
                 global blk
-                lst = settings[0].split(',')
-                fist = settings[1].split(',')[0]
-                blk = settings[1].split(',')[1]
+                lst = []
+                for pos in settings[0].split(","):
+                    coord = pos.split("&")
+                    lst.append(gui.Position(int(coord[0]),int(coord[1])))
+                fcoord = settings[1].split(",")[0].split("&")
+                fist = gui.Position(int(fcoord[0],fcoord[1]))
+                bcoord = settings[1].split(",")[1].split("&")
+                fist = gui.Position(int(bcoord[0],bcoord[1]))
             print("current pos")
             confirmpos()
             confirminv()
