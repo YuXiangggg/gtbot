@@ -6,13 +6,13 @@ from numpy import *
 from PIL import ImageGrab
 from PIL import ImageOps
 
-def autobreak(fpos,bpos,poslst):
+def autobreak(fpos,bpos,poslst,no):
 
-    def punch(fpos,poslst):
+    def punch(fpos,poslst,no):
         gui.click(fpos)
         for i in poslst:
             gui.moveTo(i)
-            gui.dragTo(i.x,i.y,0.55,button="left")
+            gui.dragTo(i.x,i.y,0.18*no,button="left")
             
     def place(bpos,poslst):
         gui.click(bpos)
@@ -21,7 +21,7 @@ def autobreak(fpos,bpos,poslst):
     
     while not kb.is_pressed('q'):
         place(bpos,poslst)
-        punch(fpos,poslst)
+        punch(fpos,poslst,no)
 
 
 def getpos():
@@ -68,7 +68,7 @@ def getinv():
             with open("settings.txt", 'a') as f:
                 fst = "&".join([str(fist.x),str(fist.y)])
                 bk = "&".join([str(blk.x),str(blk.y)])
-                f.write(",".join([fst,bk]))
+                f.write(",".join([fst,bk]) + "\n")
             return False
         
 
@@ -134,6 +134,13 @@ def getbuttonspos():
         retry2=input("Enter 1 to retry, 0 to continue")
         if retry2 != "1":
             break
+        
+def getnopunch():
+    global no 
+    no = int(input("Enter number of punches: "))
+    with open("settings.txt", "a") as f:
+        f.write(str(no))
+    
 def main():
     print("Welcome to this thing that fishburrito made before bicul eoy\n")
     # print("This thing is illegal, you will be a bad growtopian if u use this\n")
@@ -155,6 +162,7 @@ def main():
                 global lst
                 global fist
                 global blk
+                global no 
                 lst = []
                 for pos in settings[0].split(","):
                     coord = pos.split("&")
@@ -163,22 +171,27 @@ def main():
                 fist = gui.Position(int(fcoord[0],fcoord[1]))
                 bcoord = settings[1].split(",")[1].split("&")
                 fist = gui.Position(int(bcoord[0],bcoord[1]))
+                no = int(settings[2])
             print("current pos")
             confirmpos()
             confirminv()
-            change = input("change pos?(y/n): ")
+            print("No of punches: " + no)
+            change = input("change settings?(y/n): ")
             if change == 'y':
                 getblockspos()
                 getbuttonspos()
+                getnopunch()
             print("Select blocks before u start")
             ready = input("Ready? (yes to start)")
             print("Press 'q' to stop")
-            autobreak(fist,blk,lst)
+            autobreak(fist,blk,lst,no)
                 
         except:
             getblockspos()
                 
             getbuttonspos()
+            
+            getnopunch()
             #how many hits does it take
             #get a input then calc a time
         
