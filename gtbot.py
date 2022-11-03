@@ -27,17 +27,20 @@ def autobreak(fpos,bpos,poslst,no):
 def getpos():
     global lst
     lst = []
-    poslst = ''
+    
     def on_release(key):
         
 
         if key == keyboard._win32.KeyCode(char="c"):
             pos = gui.position()
             lst.append(pos)
-            poslst = poslst + "&".join([str(pos.x),str(pos.y)]) + " "
         if key == keyboard._win32.KeyCode(char="q"):
+            poslst = []
+            for i in lst:
+                poslst.append("&".join([str(i.x),str(i.y)]))
             with open("settings.txt", "w") as f:
-                f.write(poslst+"\n")
+                f.write(",".join(poslst)+"\n")
+            print(poslst)
             return False
         
 
@@ -166,25 +169,25 @@ def main():
                 lst = []
                 for pos in settings[0].split(","):
                     coord = pos.split("&")
-                    lst.append(gui.Position(int(coord[0]),int(coord[1])))
+                    lst.append(gui.Point(int(coord[0]),int(coord[1])))
                 fcoord = settings[1].split(",")[0].split("&")
-                fist = gui.Position(int(fcoord[0],fcoord[1]))
+                fist = gui.Point(int(fcoord[0]),int(fcoord[1]))
                 bcoord = settings[1].split(",")[1].split("&")
-                fist = gui.Position(int(bcoord[0],bcoord[1]))
+                blk = gui.Point(int(bcoord[0]),int(bcoord[1]))
                 no = int(settings[2])
             print("current pos")
             confirmpos()
             confirminv()
-            print("No of punches: " + no)
+            print("No of punches: " + str(no))
             change = input("change settings?(y/n): ")
             if change == 'y':
                 getblockspos()
                 getbuttonspos()
                 getnopunch()
-            print("Select blocks before u start")
-            ready = input("Ready? (yes to start)")
-            print("Press 'q' to stop")
-            autobreak(fist,blk,lst,no)
+            # print("Select blocks before u start")
+            # ready = input("Ready? (yes to start)")
+            # print("Press 'q' to stop")
+            # autobreak(fist,blk,lst,no)
                 
         except:
             getblockspos()
@@ -198,7 +201,7 @@ def main():
         print("Select blocks before u start")
         ready = input("Ready? (yes to start)")
         print("Press 'q' to stop")
-        autobreak(fist,blk,lst)
+        autobreak(fist,blk,lst,no)
     elif option == "2":
         print("Working in Progress")
     elif option == "3":
