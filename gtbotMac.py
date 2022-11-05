@@ -6,13 +6,13 @@ from numpy import *
 from PIL import ImageGrab
 from PIL import ImageOps
 
-def autobreak(fpos,bpos,poslst):
-
-    def punch(fpos,poslst):
+def autobreak(fpos,bpos,poslst,no):
+    
+    def punch(fpos,poslst,no):
         gui.click(fpos)
         for i in poslst:
             gui.moveTo(i)
-            gui.dragTo(i.x,i.y,0.55,button="left")
+            gui.dragTo(i.x,i.y,0.18*no,button="left")
             
     def place(bpos,poslst):
         gui.click(bpos)
@@ -21,7 +21,8 @@ def autobreak(fpos,bpos,poslst):
     
     while not kb.is_pressed('q'):
         place(bpos,poslst)
-        punch(fpos,poslst)
+        punch(fpos,poslst,no)
+
 
 
 def getpos():
@@ -34,7 +35,11 @@ def getpos():
             
             lst.append(gui.position())
         if key == keyboard._darwin.KeyCode(char="q"):
-            
+            poslst = []
+            for i in lst:
+                poslst.append("&".join([str(i.x),str(i.y)]))
+            with open("settings.txt", "w") as f:
+                f.write(",".join(poslst)+"\n")
             return False
         
 
@@ -61,7 +66,10 @@ def getinv():
             global blk
             blk = gui.position()
         if key == keyboard._darwin.KeyCode(char="q"):
-            
+            with open("settings.txt", 'a') as f:
+                fst = "&".join([str(fist.x),str(fist.y)])
+                bk = "&".join([str(blk.x),str(blk.y)])
+                f.write(",".join([fst,bk]) + "\n")
             return False
         
 
@@ -105,14 +113,43 @@ def collect(pos,but):
     
     
     
+def getblockspos():
+    retry = "1"
+    while retry == "1":
+        print("Hover your cursor over the blocks that you want to break and click 'c' on your keyboard to add")
+        print("When you are done, press 'q' to confirm the spaces")
+        getpos()
+        print("Now your cursor will move to the squares you selected, if you mess up you can try again")
+        confirmpos()
+        retry=input("Enter 1 to retry, 0 to continue: ")
+        if retry != "1":
+            break
+def getbuttonspos():
+    retry2 = "1"
+    while retry2 == "1":
+        print("Hover your cursor over the first 2 inv spaces click 'f' on your keyboard to select fist, 'b' to select block")
+        print("When you are done, press 'q' to confirm")
+        getinv()
+        print("Now your cursor will move to the squares you selected, if you mess up you can try again")
+        confirminv()
+        retry2=input("Enter 1 to retry, 0 to continue")
+        if retry2 != "1":
+            break
+        
+def getnopunch():
+    global no 
+    no = int(input("Enter number of punches: "))
+    with open("settings.txt", "a") as f:
+        f.write(str(no))
+    
 def main():
     print("Welcome to this thing that fishburrito made before bicul eoy\n")
-    print("This thing is illegal, you will be a bad growtopian if u use this\n")
-    yn = input("Do you want to be a bad Growtopian? yes/no \n")
-    if yn.lower() != "yes":
-        print("Goodjob, bye!")
-        time.sleep(1)
-        exit()
+    # print("This thing is illegal, you will be a bad growtopian if u use this\n")
+    # yn = input("Do you want to be a bad Growtopian? yes/no \n")
+    # if yn.lower() != "yes":
+    #     print("Goodjob, bye!")
+    #     time.sleep(1)
+    #     exit()
     print("Okay bad growtopian what do you want to do?")
     print("1. Autobreak")
     print("2. Fishing (WIP)")
@@ -120,34 +157,49 @@ def main():
     option = input()
     
     if option == "1":
-        retry = "1"
-        while retry == "1":
-            print("Hover your cursor over the blocks that you want to break and click 'c' on your keyboard to add")
-            print("When you are done, press 'q' to confirm the spaces")
-            getpos()
-            print("Now your cursor will move to the squares you selected, if you mess up you can try again")
+        try:
+            with open("settings.txt","r") as f:
+                settings = f.readlines()
+                global lst
+                global fist
+                global blk
+                global no 
+                lst = []
+                for pos in settings[0].split(","):
+                    coord = pos.split("&")
+                    lst.append(gui.Point(int(coord[0]),int(coord[1])))
+                fcoord = settings[1].split(",")[0].split("&")
+                fist = gui.Point(int(fcoord[0]),int(fcoord[1]))
+                bcoord = settings[1].split(",")[1].split("&")
+                blk = gui.Point(int(bcoord[0]),int(bcoord[1]))
+                no = int(settings[2])
+            print("current pos")
             confirmpos()
-            retry=input("Enter 1 to retry, 0 to continue: ")
-            if retry != "1":
-                break
-            
-        retry2 = "1"
-        while retry2 == "1":
-            print("Hover your cursor over the first 2 inv spaces click 'f' on your keyboard to select fist, 'b' to select block")
-            print("When you are done, press 'q' to confirm")
-            getinv()
-            print("Now your cursor will move to the squares you selected, if you mess up you can try again")
             confirminv()
-            retry2=input("Enter 1 to retry, 0 to continue")
-            if retry2 != "1":
-                break
-        #how many hits does it take
-        #get a input then calc a time
+            print("No of punches: " + str(no))
+            change = input("change settings?(y/n): ")
+            if change == 'y':
+                getblockspos()
+                getbuttonspos()
+                getnopunch()
+            # print("Select blocks before u start")
+            # ready = input("Ready? (yes to start)")
+            # print("Press 'q' to stop")
+            # autobreak(fist,blk,lst,no)
+                
+        except:
+            getblockspos()
+                
+            getbuttonspos()
+            
+            getnopunch()
+            #how many hits does it take
+            #get a input then calc a time
         
-        print("Put the block in the 2nd inv space from the left and select it before u start")
+        print("Select blocks before u start")
         ready = input("Ready? (yes to start)")
         print("Press 'q' to stop")
-        autobreak(fist,blk,lst)
+        autobreak(fist,blk,lst,no)
     elif option == "2":
         print("Working in Progress")
     elif option == "3":

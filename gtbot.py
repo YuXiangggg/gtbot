@@ -40,7 +40,7 @@ def getpos():
                 poslst.append("&".join([str(i.x),str(i.y)]))
             with open("settings.txt", "w") as f:
                 f.write(",".join(poslst)+"\n")
-            print(poslst)
+            
             return False
         
 
